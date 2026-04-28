@@ -2,8 +2,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class SudokuServiceImpl implements SudokuService {
-
-    //SudokuServiceImpl sudokuService = new SudokuServiceImpl();
     Sudoku sudoku = new Sudoku();
     static Random random = new Random();
     static Scanner scanner = new Scanner(System.in);
@@ -19,17 +17,32 @@ public class SudokuServiceImpl implements SudokuService {
         do {
             int count = 0;
             while (count < 5) {
-                row = random.nextInt(0,9);
-                col = random.nextInt(0,9);
-                number = random.nextInt(0,9);
+                row = random.nextInt(0, 9);
+                col = random.nextInt(0, 9);
+                number = random.nextInt(0, 9);
                 board[row][col] = (byte) number;
                 count++;
             }
 
         } while (!backtracking(board));
+
         sudoku.setBoard(board);
         printTable(sudoku);
-        sudoku.setBoard(removeCells(board));
+        System.out.println("Выберете уровень сложность: 1-лёгкий, 2-средний, 3-сложный:");
+        switch (scanner.nextInt()) {
+            case 1:
+                sudoku.setBoard(removeCells(board, 50));
+                break;
+            case 2:
+                sudoku.setBoard(removeCells(board, 35));
+                break;
+            case 3:
+                sudoku.setBoard(removeCells(board, 25));
+                break;
+            default:
+                System.out.println("Выберете 1, 2 или 3.");
+        }
+
         printTable(sudoku);
 
         do {
@@ -38,14 +51,14 @@ public class SudokuServiceImpl implements SudokuService {
             row = scanner.nextInt();
             col = scanner.nextInt();
             number = scanner.nextByte();
-            addNumberInTable(sudoku, row-1, col-1, (byte) number);
-        } while (!valid(board));
+            addNumberInTable(sudoku, row - 1, col - 1, (byte) number);
+        } while (!valid(sudoku));
 
         System.out.println("Молодец! Решение судоку завершено!");
     }
 
-    public static boolean valid(byte[][] sud) {
-        for (byte[] cow : sud) {
+    private boolean valid(Sudoku sudoku) {
+        for (byte[] cow : sudoku.board) {
             for (int element : cow) {
                 if (element == 0) return false;
             }
@@ -54,7 +67,6 @@ public class SudokuServiceImpl implements SudokuService {
     }
 
     private boolean backtracking(byte[][] board) { // метод заполнения таблицы цифрами и что задача решена
-        SudokuServiceImpl sudokuService = new SudokuServiceImpl();
         int[] position = findAnEmptyCell(board);
         if (position == null) {
             return true;
@@ -64,7 +76,7 @@ public class SudokuServiceImpl implements SudokuService {
         int col = position[1];
 
         for (byte k = 1; k <= 9; k++) {
-            if (sudokuService.isValidMove(board, row, col, k, false)) {
+            if (isValidMove(board, row, col, k, false)) {
                 board[row][col] = k;
 
                 if (backtracking(board)) {
@@ -146,13 +158,13 @@ public class SudokuServiceImpl implements SudokuService {
         return false;
     }
 
-    private byte[][] removeCells(byte[][] board) {// метод удаления цифр при формировании таблицы, готов
+    private byte[][] removeCells(byte[][] board, int countTips) {// метод удаления цифр при формировании таблицы
         int tips = 0;
         for (byte[] row : board) {
             tips += row.length;
         }
 
-        while (tips > 50) {
+        while (tips > countTips) {
             int row = random.nextInt(0, 9);
             int col = random.nextInt(0, 9);
             byte number = board[row][col];
@@ -170,13 +182,12 @@ public class SudokuServiceImpl implements SudokuService {
         return board;
     }
 
-    private boolean hasUniqueSolution(byte[][] board) { // метод подтверждения, что решение уникально, готов
+    private boolean hasUniqueSolution(byte[][] board) { // метод подтверждения, что решение уникально
         int solutions = countSolutions(board);
         return solutions == 1;
     }
 
-    private int countSolutions(byte[][] board) { // метод для проверки уникальности, готов
-        SudokuServiceImpl sudokuService = new SudokuServiceImpl();
+    private int countSolutions(byte[][] board) { // метод для проверки уникальности
         int[] position = findAnEmptyCell(board);
         int count = 0;
         int row;
@@ -189,7 +200,7 @@ public class SudokuServiceImpl implements SudokuService {
         }
 
         for (byte k = 1; k <= 9; k++) {
-            if (sudokuService.isValidMove(board, row, col, k, false)) {
+            if (isValidMove(board, row, col, k, false)) {
                 board[row][col] = k;
                 count += countSolutions(board);
                 board[row][col] = 0;
@@ -247,8 +258,7 @@ public class SudokuServiceImpl implements SudokuService {
             printTable(sudoku);
         }
     }
-
-    // сделать сложность 1 - 3
-    // попробовать сделать графический интерфейс
 }
+
+// попробовать сделать графический интерфейс
 
