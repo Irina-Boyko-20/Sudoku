@@ -1,3 +1,5 @@
+package sudoku;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -8,7 +10,6 @@ public class SudokuServiceImpl implements SudokuService {
     private static final int LIMIT = 2;
     private static final int SIZE = 9;
 
-    @Override
     public void createBoard() {
         byte[][] board = new byte[SIZE][SIZE];
         int row;
@@ -27,7 +28,7 @@ public class SudokuServiceImpl implements SudokuService {
         } while (!backtracking(board));
 
         sudoku.setBoard(board);
-        printTable(sudoku);
+        //printTable(sudoku);
         System.out.println("Выберете уровень сложность: 1-лёгкий, 2-средний, 3-сложный:");
         switch (scanner.nextInt()) {
             case 1:
@@ -46,8 +47,8 @@ public class SudokuServiceImpl implements SudokuService {
         printTable(sudoku);
 
         do {
-            System.out.println("Нужно ввести через 'Enter' сначала номер строки от 0 до 8, "
-                    + "затем столбец от 0 до 8 и число от 1 до 9");
+            System.out.println("Нужно ввести через 'Enter' сначала номер строки от 1 до 9, "
+                    + "затем столбец от 1 до 9 и число от 1 до 9");
             row = scanner.nextInt();
             col = scanner.nextInt();
             number = scanner.nextByte();
@@ -249,7 +250,6 @@ public class SudokuServiceImpl implements SudokuService {
         System.out.println();
     }
 
-    @Override
     public void addNumberInTable(Sudoku sudoku, int row, int col, byte num) {
         byte[][] board = sudoku.getBoard();
         if (isValidMove(board, row, col, num, true)) {
