@@ -1,7 +1,5 @@
 package sudoku;
 
 public interface SudokuService {
-    void createBoard();
-
-    void addNumberInTable(Sudoku sudoku, int row, int col, byte num);
+    Sudoku createNewBoard(String level);
 }

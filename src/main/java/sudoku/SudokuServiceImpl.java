@@ -1,21 +1,43 @@
 package sudoku;
 
-import java.util.Random;
-import java.util.Scanner;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Random;
+
+@Slf4j
+@NoArgsConstructor
 public class SudokuServiceImpl implements SudokuService {
     Sudoku sudoku = new Sudoku();
     static Random random = new Random();
-    static Scanner scanner = new Scanner(System.in);
     private static final int LIMIT = 2;
     private static final int SIZE = 9;
 
-    public void createBoard() {
+    @Override
+    public Sudoku createNewBoard(String level) {
+        sudoku = new Sudoku();
+        if (level == null) return null;
+        log.debug("Выбран уровень: {}", level);
+        switch (level) {
+            case "EASY":
+                sudoku.setBoard(removeCells(createBoard(), 50));
+                break;
+            case "MEDIUM":
+                sudoku.setBoard(removeCells(createBoard(), 35));
+                break;
+            case "HARD":
+                sudoku.setBoard(removeCells(createBoard(), 25));
+                break;
+        }
+
+        return sudoku;
+    }
+
+    private byte[][] createBoard() {
         byte[][] board = new byte[SIZE][SIZE];
-        int row;
-        int col;
-        int number;
+        int row, col, number;
         do {
+            board = new byte[SIZE][SIZE];
             int count = 0;
             while (count < 5) {
                 row = random.nextInt(0, 9);
@@ -27,44 +49,7 @@ public class SudokuServiceImpl implements SudokuService {
 
         } while (!backtracking(board));
 
-        sudoku.setBoard(board);
-        //printTable(sudoku);
-        System.out.println("Выберете уровень сложность: 1-лёгкий, 2-средний, 3-сложный:");
-        switch (scanner.nextInt()) {
-            case 1:
-                sudoku.setBoard(removeCells(board, 50));
-                break;
-            case 2:
-                sudoku.setBoard(removeCells(board, 35));
-                break;
-            case 3:
-                sudoku.setBoard(removeCells(board, 25));
-                break;
-            default:
-                System.out.println("Выберете 1, 2 или 3.");
-        }
-
-        printTable(sudoku);
-
-        do {
-            System.out.println("Нужно ввести через 'Enter' сначала номер строки от 1 до 9, "
-                    + "затем столбец от 1 до 9 и число от 1 до 9");
-            row = scanner.nextInt();
-            col = scanner.nextInt();
-            number = scanner.nextByte();
-            addNumberInTable(sudoku, row - 1, col - 1, (byte) number);
-        } while (!valid(sudoku));
-
-        System.out.println("Молодец! Решение судоку завершено!");
-    }
-
-    private boolean valid(Sudoku sudoku) {
-        for (byte[] cow : sudoku.board) {
-            for (int element : cow) {
-                if (element == 0) return false;
-            }
-        }
-        return true;
+        return board;
     }
 
     private boolean backtracking(byte[][] board) { // метод заполнения таблицы цифрами и что задача решена
@@ -109,12 +94,12 @@ public class SudokuServiceImpl implements SudokuService {
 
     private boolean isValidMove(byte[][] board, int row, int col, byte num, boolean printMessages) {
         if (!isEmpty(board, row, col)) {
-            if (printMessages) System.out.println("ОШИБКА! В ячейке уже есть число");
+            if (printMessages) log.debug("ОШИБКА! В ячейке уже есть число"); // добавить визуал в графике
             return false;
         } else if (containsNumberInRow(board, row, num) || containsNumberInColumn(board, col, num)
                 || containsNumberInSquare(board, row, col, num)) {
-            if (printMessages) System.out.println("ОШИБКА! Число " + num
-                    + " уже есть в ряду, столбце или квадрате. Укажи другое число.");
+            if (printMessages) // добавить визуал в графике
+                log.debug("ОШИБКА! Число {} уже есть в ряду, столбце или квадрате. Укажи другое число.", num);
             return false;
         }
 
@@ -213,52 +198,5 @@ public class SudokuServiceImpl implements SudokuService {
 
         return count;
     }
-
-    private void printTable(Sudoku sudoku) {
-        byte[][] board = sudoku.getBoard();
-        System.out.print("   ");
-        for (int i = 1; i < 10; i++) {
-            System.out.print(i + " ");
-            if ((i + 1) % 3 == 1 && i != 9) {
-                System.out.print("| ");
-            }
-        }
-        System.out.println();
-        System.out.println("---------+-------+------");
-        for (int row = 0; row < board.length; row++) {
-            if (row % 3 == 0 && row != 0) {
-                System.out.println("---------+-------+------");
-            }
-
-            System.out.print(row + 1 + "| ");
-
-            for (int col = 0; col < board.length; col++) {
-                if (board[row][col] == 0) {
-                    System.out.print(". ");
-                } else {
-                    System.out.print(board[row][col] + " ");
-                }
-
-                if ((col + 1) % 3 == 0 && col != 8) {
-                    System.out.print("| ");
-                }
-            }
-
-            System.out.println();
-        }
-
-        System.out.println();
-    }
-
-    public void addNumberInTable(Sudoku sudoku, int row, int col, byte num) {
-        byte[][] board = sudoku.getBoard();
-        if (isValidMove(board, row, col, num, true)) {
-            board[row][col] = num;
-            sudoku.setBoard(board);
-            printTable(sudoku);
-        }
-    }
 }
-
-// попробовать сделать графический интерфейс
 
