@@ -30,17 +30,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
-        /*sudoku.SudokuServiceImpl service = new sudoku.SudokuServiceImpl();
-        service.createBoard();*/
-
-        /*SudokuFrame frame = new SudokuFrame();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame.createGUI();
-            }
-        });*/
     }
 }

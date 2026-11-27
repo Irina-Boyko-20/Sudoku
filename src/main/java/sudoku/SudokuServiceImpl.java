@@ -16,7 +16,6 @@ public class SudokuServiceImpl implements SudokuService {
     @Override
     public Sudoku createNewBoard(String level) {
         sudoku = new Sudoku();
-        if (level == null) return null;
         log.debug("Выбран уровень: {}", level);
         switch (level) {
             case "EASY":

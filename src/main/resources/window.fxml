@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sudoku.SudokuController">
    <top>
@@ -25,6 +26,10 @@
       <GridPane fx:id="gridPane" prefHeight="450.0" prefWidth="450.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <HBox fx:id="buttonPanel" alignment="CENTER" spacing="10.0" />
+      <HBox fx:id="buttonPanel" alignment="CENTER" spacing="10.0" >
+        <BorderPane.margin>
+            <Insets bottom="50.0" />
+        </BorderPane.margin>
+      </HBox>
    </bottom>
 </BorderPane>

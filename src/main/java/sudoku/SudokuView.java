@@ -1,31 +1,26 @@
 package sudoku;
 
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import lombok.Getter;
 
 public class SudokuView {
-
-    @FXML
-    private GridPane gridPane;
-
-    @Getter
-    @FXML
-    public ComboBox<String> levelComboBox;
-
+    private final GridPane gridPane;
+    public final ComboBox<String> levelComboBox;
+    private final HBox buttonPanel;
     private final TextField[][] cells = new TextField[9][9];
 
-    @FXML
-    private HBox buttonPanel;
+    public SudokuView(GridPane gridPane, ComboBox<String> levelComboBox, HBox buttonPanel) {
+        this.gridPane = gridPane;
+        this.levelComboBox = levelComboBox;
+        this.buttonPanel = buttonPanel;
+    }
 
     // создание поля перед игрой
-    @FXML
-    private void initialize() {
+    public void init() {
         // инициализация таблицы
         for (int i = 0; i < 9; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
