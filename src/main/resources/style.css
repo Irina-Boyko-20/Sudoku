@@ -6,6 +6,12 @@
     -fx-padding: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
+
+    /* Параметры текста */
+        -fx-alignment: center;
+        -fx-font-size: 20px;
+        -fx-font-weight: bold;
+        -fx-text-fill: #000000;
 }
 
 /* Убираем стандартную рамку при фокусе */

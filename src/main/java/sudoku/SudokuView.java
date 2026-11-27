@@ -37,14 +37,13 @@ public class SudokuView {
             for (int col = 0; col < 9; col++) {
                 TextField textField = new TextField();
                 textField.setPrefSize(50, 50);
-                textField.setStyle("-fx-alignment: center; -fx-font-size: 20px; -fx-font-weight: bold;");
+                textField.getStyleClass().add("sudoku-cell");
                 textField.textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("[1-9]?")) {
                         textField.setText(oldValue);
                     }
                 });
 
-                textField.getStyleClass().add("sudoku-textField");
                 cells[row][col] = textField;
                 gridPane.add(textField, col, row);
 
@@ -103,12 +102,10 @@ public class SudokuView {
                     // Пустая ячейка для игры
                     cell.setText("");
                     cell.setEditable(true);
-                    cell.setStyle("-fx-background-color: white;");
                 } else {
                     // Ячейка с подсказкой (сгенерированное число)
                     cell.setText(String.valueOf(value));
                     cell.setEditable(false); // Запрещаем менять подсказки
-                    cell.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-weight: bold;");
                 }
             }
         }
